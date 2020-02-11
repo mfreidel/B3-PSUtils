@@ -114,6 +114,29 @@ Describe "Get-B3HashCollection" {
 	}
 }
 
+Describe "Get-B3StringHash" {
+	Context "Input" {
+		It "accepts a string as first positional parameter" {
+			Get-B3StringHash Pester | should not be $null
+		}
+		It "accepts a string from pipeline" {
+			("Pester" | Get-B3StringHash) | should not be $null
+		}
+		It "optionally accepts an additional string for key derivation" {
+			("Pester" | Get-B3StringHash -KeyContext "Pester") | should not be $null
+		}
+	}
+	Context "Output" {
+		It "returns hash value that is 64 chars long by default" {
+			("Pester" | Get-B3StringHash).length | should be 64
+		}
+		It "can return a derived key" {
+			("Pester" | Get-B3StringHash -KeyContext "Pester").length | should be 64
+			(("Pester" | Get-B3StringHash -KeyContext "Pester") -eq ("Pester" | Get-B3StringHash)) | should be $false
+		}
+	}
+}
+
 Describe "Get-B3sumExePath" {
 	Context "Output" {
 		It "displays path to b3sum exectuble used by the module" {
@@ -155,3 +178,5 @@ Describe "Set-B3sumExePath" {
 		}
 	}
 }
+
+
