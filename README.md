@@ -63,12 +63,13 @@ If you have Pester installed, you can change to the module directory in PowerShe
 
 
 ## Using the module
-There are four exported functions in the module:
+There are five exported functions in the module:
 
 1. 'Get-B3FileHash' generates a BLAKE3 hash of a single file.
 2. 'Get-B3HashCollection' generates BLAKE3 hashes for an array of file names.
-3. 'Get-B3sumExePath' shows the path to the b3sum executable that will be used for generating hashes
-4. 'Set-B3sumExePath' changes the path to a b3sum executable used by the module
+3. 'Get-B3StringHash' generates a BLAKE3 hash of a given string.
+4. 'Get-B3sumExePath' shows the path to the b3sum executable that will be used for generating hashes
+5. 'Set-B3sumExePath' changes the path to a b3sum executable used by the module
 
 Usage information is available from Get-Help or the -? common parameter (Help Entries are written in module's source as comment blocks) 
 
