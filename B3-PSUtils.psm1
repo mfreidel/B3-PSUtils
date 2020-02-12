@@ -220,6 +220,49 @@ PS> Get-B3HashCollection -FromArray $MyArray -Timer -ShowCommand
 }
 
 
+Function Get-B3StringHash {
+<#
+.SYNOPSIS
+Generates a BLAKE3 hash of a string value.
+
+.DESCRIPTION
+Takes a string and returns a BLAKE3 hash. Optionally can return a derived key when the -KeyContext parameter is used.
+
+.PARAMETER Value
+Specifies the string to be hashed.
+
+.PARAMETER KeyContext
+Specifies the Category string used in key derivation mode.
+
+.EXAMPLE
+PS> Get-B3StringHash "MyString"
+
+.EXAMPLE
+PS> Get-B3StringHash "MyString" -KeyContext "MyContext"
+#>
+	param (
+		[Parameter( 
+			Mandatory = $true,
+			ValueFromPipeline = $true
+		)] [string] $Value,
+		[string] $KeyContext
+	)
+	
+	# Build the command string
+	$CommandString = "'$Value' | cmd /c '$b3sumEXE'"
+	if ($KeyContext -ne "") { # KeyContext was specified: add the --derive-key option and use the context
+		# add " --derive-key '$KeyContext'" to the end
+		Write-host "Not implemented!"
+	}
+	
+	# Run command, store output
+	$CommandOutput = Invoke-Expression $CommandString
+	
+	# Return the command output
+	return $CommandOutput
+}
+
+
 Function Get-B3sumExePath {
 <#
 .SYNOPSIS
