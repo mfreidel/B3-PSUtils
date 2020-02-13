@@ -5,11 +5,11 @@ The purpose of this module is to add a PowerShell script-able interface for gene
 
 
 ## Where's the Rust?
-This is currently just a wrapper for b3sum.exe, which the user must compile before using this module. However, a goal of this project is to have the Rust code incorporated into the project eventually.
+This is currently just a wrapper for b3sum.exe, which the user must compile before using this module. However, a goal of this project is to have the Rust code incorporated and released with the module eventually.
 
 
 ## Installing
-It is important to note that this module does not include any software (either in source or binary form) from BLAKE3 or b3sum yet. Using this module requires that you download and compile b3sum yourself on Windows (Linux PowerShell is not yet supported).
+It is important to note that using this module requires that you download and compile b3sum yourself on Windows. Linux PowerShell is not yet supported.
 
 
 ### Step 1: Install Rust/Cargo
@@ -47,8 +47,6 @@ Copy-Item $DownloadedModule $home\Documents\WindowsPowerShell\Modules -Recurse
 
 
 ### Step 4: Load the module
-You may need to change PowerShell's execution policy to something less restrictive than the default. Read [this document from Microsoft](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7) for information about how you can change it. For security purposes, consider limiting the scope of this change as much as your needs for this module allow.
-
 If you didn't install the module, run from PowerShell:
 ```
 Import-Module 'C:\path\to\downloaded\B3-PSUtils\B3-PSUtils.psd1'
@@ -59,8 +57,9 @@ If you installed the module, you can run:
 Import-Module B3-PSUtils 
 ```
 
-If you have Pester installed, you can change to the module directory in PowerShell and run `Invoke-Pester`. Doing so will reload the module and verify that everything is working properly.
+If you have Pester installed, you can change to the module directory in PowerShell and run `Invoke-Pester`. Doing so will load (or reload) the module and verify that everything is working properly.
 
+You may need to change PowerShell's execution policy to something less restrictive than the default. Read [this document from Microsoft](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7) for information about how you can change it. For security purposes, consider limiting the scope of this change as much as your needs for this module allow.
 
 ## Using the module
 There are five exported functions in the module:
