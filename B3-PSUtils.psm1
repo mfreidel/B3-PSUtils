@@ -47,7 +47,7 @@ Function Check-B3sumExePath {
 		if (Test-Path $Path) { 
 			
 			# Test the exe using the -V switch to print b3sum's version
-			$b3sumExeTest = (Invoke-Expression "cmd /c '$Path' -V") 
+			$b3sumExeTest = (Invoke-Expression "& '$Path' -V") 
 			
 			# Finally, verify exe output is from a b3sum executable
 			if ($b3sumExeTest -like "b3sum*") { 
@@ -82,7 +82,7 @@ Function Get-B3FileHash {
 Creates a BLAKE3 hash of a given file.
 
 .DESCRIPTION
-Takes a file name as a string and returns a PowerShell object that resembles the output of Get-FileHash. This will only work with a single file name, and is not designed to work with multiple files (Use Get-B3HashCollection instead)
+Takes a file name as a string and returns a PowerShell object that resembles the output of Get-FileHash. This will only work with a single file name, and is not designed to work with multiple files (Use Get-B3HashCollection instead).
 
 .PARAMETER FileName
 Specifies the file name.
@@ -123,14 +123,14 @@ PS> Get-B3FileHash -FileName C:\Path\To\NameOfMy.file -Timer -ShowCommand
 		$FileName = (Get-ChildItem $FileName).FullName
 		
 		#Build command string based on parameters
-		$CommandString = "'$BinaryPath'"
+		$CommandString = "& '$BinaryPath'"
 		$CommandString += " '$FileName'"
 	
 		# Start Timer before running the command
 		if ($Timer) {$Time1 = Get-Date}
 	
 		# Run the constructed the command, and store the output
-		$CommandOutput = (Invoke-Expression "cmd /c $CommandString")
+		$CommandOutput = (Invoke-Expression $CommandString)
 	
 		# Stop Timer and store it in seconds
 		if ($Timer) {
