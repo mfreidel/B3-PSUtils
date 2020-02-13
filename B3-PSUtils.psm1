@@ -232,7 +232,7 @@ Takes a string and returns a BLAKE3 hash. Optionally can return a derived key wh
 Specifies the string to be hashed.
 
 .PARAMETER KeyContext
-Specifies the Category string used in key derivation mode.
+Specifies the context string used in key derivation mode.
 
 .EXAMPLE
 PS> Get-B3StringHash "MyString"
@@ -249,10 +249,9 @@ PS> Get-B3StringHash "MyString" -KeyContext "MyContext"
 	)
 	
 	# Build the command string
-	$CommandString = "'$Value' | cmd /c '$b3sumEXE'"
-	if ($KeyContext -ne "") { # KeyContext was specified: add the --derive-key option and use the context
-		# add " --derive-key '$KeyContext'" to the end
-		Write-host "Not implemented!"
+	$CommandString = "'$Value' | & '$b3sumEXE'"
+	if ($KeyContext -ne "") { # KeyContext was specified: add the --derive-key option with the variable
+		$CommandString += " --derive-key '$KeyContext'"
 	}
 	
 	# Run command, store output

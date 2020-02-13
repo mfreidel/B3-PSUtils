@@ -41,10 +41,11 @@ $InitEnd = Get-Date
 $LoadTime = [math]::Round(($InitEnd - $InitStart).TotalMilliseconds)
 
 # Display load time and version string
-$ThisModuleVersion = ((Get-Module B3-PSUtils).version).ToString()
+$ThisModuleVersion = ((Get-Module $ThisModuleName).version).ToString()
 Write-Host "Module loaded in $LoadTime`ms (Version: $ThisModuleVersion) `n`n"
 
 # Show Full Module Details (uncomment if necessary, but this is usually too much info.)
+#
 #Write-Host "Full Module Details:`n"; Get-Module $ThisModuleName | select * -ExcludeProperty "Definition"; Write-Host "`n`n"
 
 # Generate hashes of the module files for testing
@@ -56,12 +57,22 @@ Write-Host "Example Output:`n`n"
 Write-Host "PS...> Get-B3FileHash $TestFileName -ShowCommand -Timer | FL"
 Get-B3FileHash $TestFileName -ShowCommand -Timer | Format-List
 
-# Show Example Output for Single file
+# Show Example Output for multiple files
 Write-Host "PS...> `$MyArray = @('.\B3-PSUtils.psm1', '.\B3-PSUtils.tests.ps1')"
 Write-Host "PS...> ,`$MyArray | Get-B3HashCollection -ShowCommand -Timer | FL"
 ,$TestFileNamesArray | Get-B3HashCollection -ShowCommand -Timer | Format-List
 
-Write-Host "Running unit tests...`n`n"
+#Show Example output for hashing a string
+Write-Host "PS...> Get-B3StringHash 'B3-PSUtils'"
+Get-B3StringHash 'B3-PSUtils'
+
+Write-Host "`n`n"
+
+#Show Example output for key derivation
+Write-Host "PS...> Get-B3StringHash 'B3-PSUtils' -KeyContext 'B3-PSUtils'"
+Get-B3StringHash 'B3-PSUtils' -KeyContext 'B3-PSUtils'
+
+Write-Host "`n`nRunning unit tests...`n`n"
 
 Describe "Get-B3FileHash" {
 	Context "Input" {
