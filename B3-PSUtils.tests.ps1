@@ -105,6 +105,9 @@ Describe "Get-B3FileHash" {
 		It "does not display b3sum command used when unspecified" {
 			(Get-B3FileHash $TestFileName).CommandUsed | should be $null
 		}
+		It "can pas the --no-memmap option to b3sum" {
+			(Get-B3FileHash $TestFileName -ShowCommand -NoMMap).CommandUsed  | should BeLike "*--no-mmap*"
+		}
 		It "returns a 32-byte hash string by default" {
 			((Get-B3FileHash $TestFileName).Hash).Length | should be 64
 		}
@@ -140,6 +143,9 @@ Describe "Get-B3HashCollection" {
 		}
 		It "sends 'ShowCommand' option to Get-B3FileHash" {
 			$OutputArray[1].CommandUsed  | should BeLike "*b3sum*"
+		}
+		It "can pass the --no-memmap option to b3sum" {
+			(Get-B3HashCollection $TestFileNamesArray -ShowCommand -NoMMap)[1].CommandUsed  | should BeLike "*--no-mmap*"
 		}
 		It "returns a 32-byte hash string by default" {
 			((Get-B3HashCollection $TestFileNamesArray)[0].Hash).Length | should be 64
