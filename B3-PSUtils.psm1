@@ -90,6 +90,9 @@ Specifies the file name.
 .PARAMETER BinaryPath
 Specifies the executable to use. Default value is the module's b3sum executable path (See Get-B3SumExePath and Set-B3SumExePath).
 
+.PARAMETER NoMMap
+Disables memory mapping
+
 .PARAMETER Timer
 Shows the 'CalculationSeconds' property in the returned object (how many seconds it took to calculate the hash value)
 
@@ -172,6 +175,9 @@ Takes an array of file names (as a string) and returns an array of PowerShell ob
 .PARAMETER FromArray
 Specifies the array of file names.
 
+.PARAMETER NoMMap
+Disables memory mapping
+
 .PARAMETER Timer
 Shows the 'CalculationTime' property in the returned objects (how many seconds it took to calculate the hash value)
 
@@ -190,14 +196,15 @@ PS> Get-B3HashCollection -FromArray $MyArray -Timer -ShowCommand
 	param (
 		[Parameter(
 			ValueFromPipeline = $true
-
 		)] [array] $FromArray,
+		[switch] $NoMMap,
 		[switch] $Timer,
 		[switch] $ShowCommand
 	)
 	
 	# These options get added to the command string for each file
 	$PassthroughOptions = ""
+	if ($NoMMap) {$PassthroughOptions += " -NoMMap"}
 	if ($Timer) {$PassthroughOptions += " -Timer"}
 	if ($ShowCommand) {$PassthroughOptions += " -ShowCommand"}
 
