@@ -82,6 +82,12 @@ Describe "Get-B3FileHash" {
 		It "accepts a file name from pipeline" {
 			($TestFileName | Get-B3FileHash) | should not be $null
 		}
+		It "has a parameter to disable memory mapping" {
+			(Get-Command Get-B3FileHash).Parameters.Values.Name -Contains "NoMMap" | should be $true
+		}
+		It "has a parameter to change output value length" {
+			(Get-Command Get-B3FileHash).Parameters.Values.Name -Contains "Length" | should be $true
+		}
 	}
 	Context "Output"{
 		It "returns a powershell object" {
@@ -99,6 +105,12 @@ Describe "Get-B3FileHash" {
 		It "does not display b3sum command used when unspecified" {
 			(Get-B3FileHash $TestFileName).CommandUsed | should be $null
 		}
+		It "returns a 32-byte hash string by default" {
+			((Get-B3FileHash $TestFileName).Hash).Length | should be 64
+		}
+		It "returns a different sized hash when specified" {
+			((Get-B3FileHash $TestFileName -Length 64).Hash).Length | should be 128
+		}
 	}
 }
 
@@ -110,6 +122,13 @@ Describe "Get-B3HashCollection" {
 		It "accepts an array of file names from pipeline" {
 			(,$TestFileNamesArray | Get-B3HashCollection) | should not be $null # Unary array operator (,) is necessary in this case. Not sure how to fix that...
 		}
+		It "has a parameter to disable memory mapping" {
+			(Get-Command Get-B3HashCollection).Parameters.Values.Name -Contains "NoMMap" | should be $true
+		}
+		It "has a parameter to change output value length" {
+			(Get-Command Get-B3HashCollection).Parameters.Values.Name -Contains "Length" | should be $true
+		}
+		
 	}
 	Context "Output" {
 		$OutputArray = (Get-B3HashCollection -FromArray $TestFileNamesArray -Timer -ShowCommand)
@@ -122,6 +141,13 @@ Describe "Get-B3HashCollection" {
 		It "sends 'ShowCommand' option to Get-B3FileHash" {
 			$OutputArray[1].CommandUsed  | should BeLike "*b3sum*"
 		}
+		It "returns a 32-byte hash string by default" {
+			((Get-B3HashCollection $TestFileNamesArray)[0].Hash).Length | should be 64
+		}
+		It "returns a different sized hash when specified" {
+			((Get-B3HashCollection $TestFileNamesArray -Length 64)[0].Hash).Length | should be 128
+		}
+		
 	}
 }
 
@@ -136,10 +162,19 @@ Describe "Get-B3StringHash" {
 		It "optionally accepts an additional string for key derivation" {
 			("Pester" | Get-B3StringHash -KeyContext "Pester") | should not be $null
 		}
+		It "has a parameter to disable memory mapping" {
+			(Get-Command Get-B3StringHash).Parameters.Values.Name -Contains "NoMMap" | should be $true
+		}
+		It "has a parameter to change output value length" {
+			(Get-Command Get-B3StringHash).Parameters.Values.Name -Contains "Length" | should be $true
+		}
 	}
 	Context "Output" {
-		It "returns hash value that is 64 chars long by default" {
+		It "returns a 32-byte hash value that by default" {
 			("Pester" | Get-B3StringHash).length | should be 64
+		}
+		It "returns a different sized hash when specified" {
+			("Pester" | Get-B3StringHash -Length 64).length | should be 128
 		}
 		It "can return a derived key" {
 			("Pester" | Get-B3StringHash -KeyContext "Pester").length | should be 64
