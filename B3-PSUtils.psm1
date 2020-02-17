@@ -111,6 +111,7 @@ PS> Get-B3FileHash -FileName C:\Path\To\NameOfMy.file -Timer -ShowCommand
 			ValueFromPipeline = $true
 		)] [string] $FileName,
 		[string] $BinaryPath = $b3sumEXE, #use b3sum executable path from module variable
+		[switch] $NoMMap,
 		[switch] $Timer,
 		[switch] $ShowCommand
 	)
@@ -124,6 +125,9 @@ PS> Get-B3FileHash -FileName C:\Path\To\NameOfMy.file -Timer -ShowCommand
 		
 		#Build command string based on parameters
 		$CommandString = "& '$BinaryPath'"
+		if ($NoMMap) {
+			$CommandString += " --no-mmap"
+		}
 		$CommandString += " '$FileName'"
 	
 		# Start Timer before running the command
