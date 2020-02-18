@@ -87,6 +87,9 @@ Takes a file name as a string and returns a PowerShell object that resembles the
 .PARAMETER FileName
 Specifies the file name.
 
+.PARAMETER Length
+Specifies the number of output bytes (default for b3sum is 32)
+
 .PARAMETER BinaryPath
 Specifies the executable to use. Default value is the module's b3sum executable path (See Get-B3SumExePath and Set-B3SumExePath).
 
@@ -115,6 +118,7 @@ PS> Get-B3FileHash -FileName C:\Path\To\NameOfMy.file -Timer -ShowCommand
 		)] [string] $FileName,
 		[string] $BinaryPath = $b3sumEXE, #use b3sum executable path from module variable
 		[switch] $NoMMap,
+		[ValidateRange(0,9000)][Int32] $Length = 32,
 		[switch] $Timer,
 		[switch] $ShowCommand
 	)
@@ -130,6 +134,9 @@ PS> Get-B3FileHash -FileName C:\Path\To\NameOfMy.file -Timer -ShowCommand
 		$CommandString = "& '$BinaryPath'"
 		if ($NoMMap) {
 			$CommandString += " --no-mmap"
+		}
+		if ($Length -ne 32) {
+			$CommandString += " -l $Length"
 		}
 		$CommandString += " '$FileName'"
 	
@@ -256,11 +263,15 @@ PS> Get-B3StringHash "MyString" -KeyContext "MyContext"
 			Mandatory = $true,
 			ValueFromPipeline = $true
 		)] [string] $Value,
-		[string] $KeyContext
+		[string] $KeyContext,
+		[switch] $NoMMap
 	)
 	
 	# Build the command string
 	$CommandString = "'$Value' | & '$b3sumEXE'"
+	if ($NoMMap) {
+			$CommandString += " --no-mmap"
+		}
 	if ($KeyContext -ne "") { # KeyContext was specified: add the --derive-key option with the variable
 		$CommandString += " --derive-key '$KeyContext'"
 	}
