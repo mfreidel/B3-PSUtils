@@ -182,6 +182,9 @@ Takes an array of file names (as a string) and returns an array of PowerShell ob
 .PARAMETER FromArray
 Specifies the array of file names.
 
+.PARAMETER Length
+Specifies the number of output bytes (default for b3sum is 32)
+
 .PARAMETER NoMMap
 Disables memory mapping
 
@@ -204,6 +207,7 @@ PS> Get-B3HashCollection -FromArray $MyArray -Timer -ShowCommand
 		[Parameter(
 			ValueFromPipeline = $true
 		)] [array] $FromArray,
+		[ValidateRange(0,9000)][Int32] $Length = 32,
 		[switch] $NoMMap,
 		[switch] $Timer,
 		[switch] $ShowCommand
@@ -211,6 +215,7 @@ PS> Get-B3HashCollection -FromArray $MyArray -Timer -ShowCommand
 	
 	# These options get added to the command string for each file
 	$PassthroughOptions = ""
+	if ($Length -ne 32) {$PassthroughOptions += " -Length $Length"}
 	if ($NoMMap) {$PassthroughOptions += " -NoMMap"}
 	if ($Timer) {$PassthroughOptions += " -Timer"}
 	if ($ShowCommand) {$PassthroughOptions += " -ShowCommand"}
