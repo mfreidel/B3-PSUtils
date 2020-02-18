@@ -257,6 +257,12 @@ Specifies the string to be hashed.
 .PARAMETER KeyContext
 Specifies the context string used in key derivation mode.
 
+.PARAMETER Length
+Specifies the number of output bytes (default for b3sum is 32)
+
+.PARAMETER NoMMap
+Disables memory mapping
+
 .EXAMPLE
 PS> Get-B3StringHash "MyString"
 
@@ -269,6 +275,7 @@ PS> Get-B3StringHash "MyString" -KeyContext "MyContext"
 			ValueFromPipeline = $true
 		)] [string] $Value,
 		[string] $KeyContext,
+		[ValidateRange(0,9000)][Int32] $Length = 32,
 		[switch] $NoMMap
 	)
 	
@@ -279,6 +286,9 @@ PS> Get-B3StringHash "MyString" -KeyContext "MyContext"
 		}
 	if ($KeyContext -ne "") { # KeyContext was specified: add the --derive-key option with the variable
 		$CommandString += " --derive-key '$KeyContext'"
+	}
+	if ($Length -ne 32) {
+			$CommandString += " -l $Length"
 	}
 	
 	# Run command, store output
